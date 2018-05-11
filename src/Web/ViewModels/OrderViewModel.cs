@@ -6,7 +6,7 @@ namespace Microsoft.eShopWeb.ViewModels
 {
     public class OrderViewModel
     {
-        public int OrderNumber { get; set; }
+        public ulong OrderNumber { get; set; }
         public DateTimeOffset OrderDate { get; set; }
         public decimal Total { get; set; }
         public string Status { get; set; }

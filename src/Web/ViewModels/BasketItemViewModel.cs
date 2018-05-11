@@ -2,8 +2,8 @@
 {
     public class BasketItemViewModel
     {
-        public int Id { get; set; }
-        public int CatalogItemId { get; set; }
+        public ulong Id { get; set; }
+        public ulong CatalogItemId { get; set; }
         public string ProductName { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal OldUnitPrice { get; set; }

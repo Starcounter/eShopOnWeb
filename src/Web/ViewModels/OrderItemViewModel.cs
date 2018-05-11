@@ -6,7 +6,7 @@ namespace Microsoft.eShopWeb.ViewModels
 {
     public class OrderItemViewModel
     {
-        public int ProductId { get; set; }
+        public ulong ProductId { get; set; }
 
         public string ProductName { get; set; }
 

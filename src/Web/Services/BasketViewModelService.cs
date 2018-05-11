@@ -11,11 +11,11 @@ namespace Microsoft.eShopWeb.Services
 {
     public class BasketViewModelService : IBasketViewModelService
     {
-        private readonly IAsyncRepository<Basket> _basketRepository;
+        private readonly IRepository<Basket> _basketRepository;
         private readonly IUriComposer _uriComposer;
         private readonly IRepository<CatalogItem> _itemRepository;
 
-        public BasketViewModelService(IAsyncRepository<Basket> basketRepository,
+        public BasketViewModelService(IRepository<Basket> basketRepository,
             IRepository<CatalogItem> itemRepository,
             IUriComposer uriComposer)
         {
@@ -27,11 +27,11 @@ namespace Microsoft.eShopWeb.Services
         public async Task<BasketViewModel> GetOrCreateBasketForUser(string userName)
         {
             var basketSpec = new BasketWithItemsSpecification(userName);
-            var basket = (await _basketRepository.ListAsync(basketSpec)).FirstOrDefault();
+            var basket = (_basketRepository.List(basketSpec)).FirstOrDefault();
 
             if(basket == null)
             {
-                return await CreateBasketForUser(userName);
+                return CreateBasketForUser(userName);
             }
             return CreateViewModelFromBasket(basket);
         }
@@ -39,13 +39,13 @@ namespace Microsoft.eShopWeb.Services
         private BasketViewModel CreateViewModelFromBasket(Basket basket)
         {
             var viewModel = new BasketViewModel();
-            viewModel.Id = basket.Id;
+            viewModel.Id = basket.IntId;
             viewModel.BuyerId = basket.BuyerId;
             viewModel.Items = basket.Items.Select(i =>
             {
                 var itemModel = new BasketItemViewModel()
                 {
-                    Id = i.Id,
+                    Id = i.IntId,
                     UnitPrice = i.UnitPrice,
                     Quantity = i.Quantity,
                     CatalogItemId = i.CatalogItemId
@@ -60,17 +60,19 @@ namespace Microsoft.eShopWeb.Services
             return viewModel;
         }
 
-        private async Task<BasketViewModel> CreateBasketForUser(string userId)
+        private BasketViewModel CreateBasketForUser(string userId)
         {
             var basket = new Basket() { BuyerId = userId };
-            await _basketRepository.AddAsync(basket);
 
-            return new BasketViewModel()
+            var basketViewModel = new BasketViewModel()
             {
                 BuyerId = basket.BuyerId,
-                Id = basket.Id,
+                Id = basket.IntId,
                 Items = new List<BasketItemViewModel>()
             };
+
+            _basketRepository.Add(basket);
+            return basketViewModel;
         }
     }
 }

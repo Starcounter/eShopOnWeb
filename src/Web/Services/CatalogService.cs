@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using ApplicationCore.Interfaces;
 using System;
 using ApplicationCore.Specifications;
+using Starcounter.Nova;
 
 namespace Microsoft.eShopWeb.Services
 {
@@ -42,7 +43,7 @@ namespace Microsoft.eShopWeb.Services
             _logger.LogInformation("GetCatalogItems called.");
 
             var filterSpecification = new CatalogFilterSpecification(brandId, typeId);
-            var root = _itemRepository.List(filterSpecification);
+            var root = _itemRepository.ListAll();
 
             var totalItems = root.Count();
 
@@ -51,20 +52,15 @@ namespace Microsoft.eShopWeb.Services
                 .Take(itemsPage)
                 .ToList();
 
-            itemsOnPage.ForEach(x =>
-            {
-                x.PictureUri = _uriComposer.ComposePicUri(x.PictureUri);
-            });
-
             var vm = new CatalogIndexViewModel()
             {
                 CatalogItems = itemsOnPage.Select(i => new CatalogItemViewModel()
                 {
-                    Id = i.Id,
+                    Id = i.IntId,
                     Name = i.Name,
-                    PictureUri = i.PictureUri,
+                    PictureUri = _uriComposer.ComposePicUri(i.PictureUri),
                     Price = i.Price
-                }),
+                }).ToList(),
                 Brands = await GetBrands(),
                 Types = await GetTypes(),
                 BrandFilterApplied = brandId ?? 0,
@@ -95,7 +91,7 @@ namespace Microsoft.eShopWeb.Services
             };
             foreach (CatalogBrand brand in brands)
             {
-                items.Add(new SelectListItem() { Value = brand.Id.ToString(), Text = brand.Brand });
+                items.Add(new SelectListItem() { Value = brand.IntId.ToString(), Text = brand.Brand });
             }
 
             return items;
@@ -111,7 +107,7 @@ namespace Microsoft.eShopWeb.Services
             };
             foreach (CatalogType type in types)
             {
-                items.Add(new SelectListItem() { Value = type.Id.ToString(), Text = type.Type });
+                items.Add(new SelectListItem() { Value = type.IntId.ToString(), Text = type.Type });
             }
 
             return items;

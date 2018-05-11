@@ -15,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
+using Infrastructure.Data.Starcounter;
+using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Starcounter.Nova;
 
 namespace Microsoft.eShopWeb
 {
@@ -40,8 +43,8 @@ namespace Microsoft.eShopWeb
         public void ConfigureTestingServices(IServiceCollection services)
         {
             // use in-memory database
-            services.AddDbContext<CatalogContext>(c => 
-                c.UseInMemoryDatabase("Catalog"));
+//            services.AddDbContext<CatalogContext>(c => 
+//                c.UseInMemoryDatabase("Catalog"));
 
             // Add Identity DbContext
             services.AddDbContext<AppIdentityDbContext>(options =>
@@ -88,13 +91,18 @@ namespace Microsoft.eShopWeb
                 options.LogoutPath = "/Account/Signout";
             });
 
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+//            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+//            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            services.AddScoped(typeof(IRepository<>), typeof(StarcounterRepository<>));
+            services.AddScoped(typeof(IAsyncRepository<>), typeof(StarcounterRepository<>));
+            services.AddScoped(typeof(IRepository<Basket>), typeof(BasketRepository));
+            services.AddScoped(typeof(IAsyncRepository<Basket>), typeof(BasketRepository));
 
             services.AddScoped<ICatalogService, CachedCatalogService>();
             services.AddScoped<IBasketService, BasketService>();
             services.AddScoped<IBasketViewModelService, BasketViewModelService>();
             services.AddScoped<IOrderService, OrderService>();
+            // todo
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<CatalogService>();
             services.Configure<CatalogSettings>(Configuration);
@@ -115,6 +123,8 @@ namespace Microsoft.eShopWeb
         public void Configure(IApplicationBuilder app, 
             IHostingEnvironment env)
         {
+//            Program.PrintTableHierarchy();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

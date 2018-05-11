@@ -37,7 +37,7 @@ namespace Microsoft.eShopWeb.Controllers
                         UnitPrice = oi.UnitPrice,
                         Units = oi.Units
                     }).ToList(),
-                    OrderNumber = o.Id,
+                    OrderNumber = o.IntId,
                     ShippingAddress = o.ShipToAddress,
                     Status = "Pending",
                     Total = o.Total()
@@ -47,9 +47,9 @@ namespace Microsoft.eShopWeb.Controllers
         }
 
         [HttpGet("{orderId}")]
-        public async Task<IActionResult> Detail(int orderId)
+        public IActionResult Detail(ulong orderId)
         {
-            var order = await _orderRepository.GetByIdWithItemsAsync(orderId);
+            var order = _orderRepository.GetByIdWithItems(orderId);
             var viewModel = new OrderViewModel()
             {
                 OrderDate = order.OrderDate,
@@ -62,7 +62,7 @@ namespace Microsoft.eShopWeb.Controllers
                     UnitPrice = oi.UnitPrice,
                     Units = oi.Units
                 }).ToList(),
-                OrderNumber = order.Id,
+                OrderNumber = order.IntId,
                 ShippingAddress = order.ShipToAddress,
                 Status = "Pending",
                 Total = order.Total()

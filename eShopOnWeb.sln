@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{419A6ACE-0419-4315-A6FB-B0E63D39432E}"
 EndProject
@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "tests\I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FunctionalTests", "tests\FunctionalTests\FunctionalTests.csproj", "{7EFB5482-F942-4C3D-94B0-9B70596E6D0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRazorPages", "src\WebRazorPages\WebRazorPages.csproj", "{3CA62E98-218E-4A74-BF79-1098900BD421}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRazorPages", "src\WebRazorPages\WebRazorPages.csproj", "{3CA62E98-218E-4A74-BF79-1098900BD421}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,19 +40,15 @@ Global
 		{7FED7440-2311-4D1E-958B-3E887C585CD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FED7440-2311-4D1E-958B-3E887C585CD2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EF6877E6-59CB-43A7-8C2C-E70DD70CC5B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF6877E6-59CB-43A7-8C2C-E70DD70CC5B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF6877E6-59CB-43A7-8C2C-E70DD70CC5B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF6877E6-59CB-43A7-8C2C-E70DD70CC5B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0F576306-7E2D-49B7-87B1-EB5D94CFD5FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0F576306-7E2D-49B7-87B1-EB5D94CFD5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F576306-7E2D-49B7-87B1-EB5D94CFD5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F576306-7E2D-49B7-87B1-EB5D94CFD5FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7EFB5482-F942-4C3D-94B0-9B70596E6D0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7EFB5482-F942-4C3D-94B0-9B70596E6D0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EFB5482-F942-4C3D-94B0-9B70596E6D0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EFB5482-F942-4C3D-94B0-9B70596E6D0A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3CA62E98-218E-4A74-BF79-1098900BD421}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CA62E98-218E-4A74-BF79-1098900BD421}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CA62E98-218E-4A74-BF79-1098900BD421}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CA62E98-218E-4A74-BF79-1098900BD421}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
