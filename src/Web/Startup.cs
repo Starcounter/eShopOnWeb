@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using Infrastructure.Data.Starcounter;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Starcounter.Nova;
@@ -89,7 +90,7 @@ namespace Microsoft.eShopWeb
             // Add memory cache services
             services.AddMemoryCache();
 
-            services.AddMvc();
+            services.AddMvc(options => options.Filters.Add(typeof(IgnoreAntiforgeryTokenAttribute), order: 1001));
 
             _services = services;
         }

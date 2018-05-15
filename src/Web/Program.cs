@@ -48,7 +48,7 @@ namespace Microsoft.eShopWeb
 
         public static void Main(string[] args)
         {
-            Process.Start("staradmin.exe", "kill devall").WaitForExit();
+            //Process.Start("staradmin.exe", "kill devall").WaitForExit();
             if (Directory.Exists(DatabaseName))
             {
                 Directory.Delete(DatabaseName, true);

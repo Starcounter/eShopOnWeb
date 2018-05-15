@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="runtime.native.Starcounter.Bluestar" Version="2.4.0-pre-012605" />
     <PackageReference Include="Starcounter.Nova.AspNetCore" Version="0.9.4-alpha-002320" />
     <PackageReference Include="Starcounter.Linq" Version="3.0.1" />
     <PackageReference Include="Ardalis.GuardClauses" Version="1.1.1" />
