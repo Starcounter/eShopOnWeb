@@ -17,7 +17,7 @@ namespace Infrastructure.Identity
 
         public Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(Db.Transact(() => user.GetObjectNo().ToString()));
+            return Task.FromResult(Db.Transact(() => user.Id.ToString()));
         }
 
         public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
