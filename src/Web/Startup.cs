@@ -15,8 +15,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using Infrastructure.Data.Starcounter;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.eShopWeb.ApplicationCore.Entities;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Starcounter.Nova;
 
 namespace Microsoft.eShopWeb
@@ -42,46 +46,17 @@ namespace Microsoft.eShopWeb
         }
         public void ConfigureTestingServices(IServiceCollection services)
         {
-            // use in-memory database
-//            services.AddDbContext<CatalogContext>(c => 
-//                c.UseInMemoryDatabase("Catalog"));
-
-            // Add Identity DbContext
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseInMemoryDatabase("Identity"));
-
             ConfigureServices(services);
         }
 
         public void ConfigureProductionServices(IServiceCollection services)
         {
-            // use real database
-            services.AddDbContext<CatalogContext>(c =>
-            {
-                try
-                {
-                    // Requires LocalDB which can be installed with SQL Server Express 2016
-                    // https://www.microsoft.com/en-us/download/details.aspx?id=54284
-                    c.UseSqlServer(Configuration.GetConnectionString("CatalogConnection"));
-                }
-                catch (System.Exception ex)
-                {
-                    var message = ex.Message;
-                }
-            });
-
-            // Add Identity DbContext
-            services.AddDbContext<AppIdentityDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
-
             ConfigureServices(services);
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<AppIdentityDbContext>()
-                .AddDefaultTokenProviders();
+            ConfigureIdentity(services);
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -117,6 +92,64 @@ namespace Microsoft.eShopWeb
             services.AddMvc();
 
             _services = services;
+        }
+
+        private static void ConfigureIdentity(IServiceCollection services)
+        {
+            AddIdentityWithoutRoles<ApplicationUser>(services)
+                    .AddDefaultTokenProviders();
+            services.TryAddScoped<IUserStore<ApplicationUser>, StarcounterUserStore>();
+        }
+
+
+        /// <summary>
+        /// This method is equivalent of <see cref="Microsoft.Extensions.DependencyInjection.IdentityServiceCollectionExtensions.AddIdentity"/>
+        /// without configuring roles.
+        /// </summary>
+        /// <typeparam name="TUser"></typeparam>
+        /// <param name="services"></param>
+        /// <returns></returns>
+        private static IdentityBuilder AddIdentityWithoutRoles<TUser>(IServiceCollection services) where TUser : class
+        {
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+                })
+                .AddCookie(IdentityConstants.ApplicationScheme, o =>
+                {
+                    o.LoginPath = new PathString("/Account/Login");
+                    o.Events = new CookieAuthenticationEvents()
+                    {
+                        OnValidatePrincipal = SecurityStampValidator.ValidatePrincipalAsync
+                    };
+                })
+                .AddCookie(IdentityConstants.ExternalScheme, o =>
+                {
+                    o.Cookie.Name = IdentityConstants.ExternalScheme;
+                    o.ExpireTimeSpan = TimeSpan.FromMinutes(5.0);
+                })
+                .AddCookie(IdentityConstants.TwoFactorRememberMeScheme,
+                    o => o.Cookie.Name = IdentityConstants.TwoFactorRememberMeScheme)
+                .AddCookie(IdentityConstants.TwoFactorUserIdScheme,
+                    o =>
+                    {
+                        o.Cookie.Name = IdentityConstants.TwoFactorUserIdScheme;
+                        o.ExpireTimeSpan = TimeSpan.FromMinutes(5.0);
+                    });
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.TryAddScoped<IUserValidator<TUser>, UserValidator<TUser>>();
+            services.TryAddScoped<IPasswordValidator<TUser>, PasswordValidator<TUser>>();
+            services.TryAddScoped<IPasswordHasher<TUser>, PasswordHasher<TUser>>();
+            services.TryAddScoped<ILookupNormalizer, UpperInvariantLookupNormalizer>();
+            services.TryAddScoped<IdentityErrorDescriber>();
+            services.TryAddScoped<ISecurityStampValidator, SecurityStampValidator<TUser>>();
+            services.TryAddScoped<IUserClaimsPrincipalFactory<TUser>, UserClaimsPrincipalFactory<TUser>>();
+            services.TryAddScoped<UserManager<TUser>, AspNetUserManager<TUser>>();
+            services.TryAddScoped<SignInManager<TUser>, SignInManager<TUser>>();
+            return new IdentityBuilder(typeof(TUser), null, services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

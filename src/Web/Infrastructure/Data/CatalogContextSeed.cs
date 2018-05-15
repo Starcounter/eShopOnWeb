@@ -3,8 +3,6 @@ using Microsoft.eShopWeb.ApplicationCore.Entities;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Starcounter.Linq;
 using Starcounter.Nova;
@@ -13,7 +11,6 @@ namespace Infrastructure.Data
 {
     public class CatalogContextSeed
     {
-        private int _nextId;
         public void SeedStarcounter(ILoggerFactory loggerFactory)
         {
             try
@@ -47,51 +44,6 @@ namespace Infrastructure.Data
             {
                 var dbObject = Db.Insert<T>();
                 Mapper.Map(poco, dbObject);
-            }
-        }
-
-        public static async Task SeedAsync(CatalogContext catalogContext,
-            ILoggerFactory loggerFactory, int? retry = 0)
-        {
-            int retryForAvailability = retry.Value;
-            try
-            {
-                // TODO: Only run this if using a real database
-                // context.Database.Migrate();
-
-                if (!catalogContext.CatalogBrands.Any())
-                {
-                    catalogContext.CatalogBrands.AddRange(
-                        GetPreconfiguredCatalogBrands());
-
-                    await catalogContext.SaveChangesAsync();
-                }
-
-                if (!catalogContext.CatalogTypes.Any())
-                {
-                    catalogContext.CatalogTypes.AddRange(
-                        GetPreconfiguredCatalogTypes());
-
-                    await catalogContext.SaveChangesAsync();
-                }
-
-                if (!catalogContext.CatalogItems.Any())
-                {
-                    catalogContext.CatalogItems.AddRange(
-                        GetPreconfiguredItems());
-
-                    await catalogContext.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                if (retryForAvailability < 10)
-                {
-                    retryForAvailability++;
-                    var log = loggerFactory.CreateLogger<CatalogContextSeed>();
-                    log.LogError(ex.Message);
-                    await SeedAsync(catalogContext, loggerFactory, retryForAvailability);
-                }
             }
         }
 
