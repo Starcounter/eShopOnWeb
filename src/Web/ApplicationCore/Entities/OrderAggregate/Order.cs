@@ -21,7 +21,7 @@ namespace ApplicationCore.Entities.OrderAggregate
             OrderItems = items;
             BuyerId = buyerId;
         }
-        public virtual string BuyerId { get; private set; }
+        public virtual string BuyerId { get; set; }
 
         public virtual DateTimeOffset OrderDate { get; private set; } = DateTimeOffset.Now;
         public virtual Address ShipToAddress { get; private set; }
