@@ -35,6 +35,7 @@ namespace Microsoft.eShopWeb
         {
             string indent = (new StringBuilder(level).Insert(0, " ", level * 2)).ToString();
             var result = Db.SQL<Starcounter.Metadata.Table>("SELECT t FROM Starcounter.Metadata.Table t");
+
             foreach (var t in result)
             {
                 if (object.Equals(t.Inherits, parent))
@@ -95,7 +96,7 @@ namespace Microsoft.eShopWeb
                         Db.Transact(() => catalogContextSeed.SeedStarcounter(loggerFactory));
                         var seedTime = sw.Elapsed;
                         logger.LogInformation($"TryOpenExisting: {tryOpenExistingTime}, StartHost: {startHostTime}, Mapper: {mapperInitiizeTime}, Seed: {seedTime}");
-//                        var catalogContext = services.GetRequiredService<CatalogContext>();
+                        //                        var catalogContext = services.GetRequiredService<CatalogContext>();
                         //                        CatalogContextSeed.SeedAsync(catalogContext, loggerFactory)
                         //                            .Wait();
 
@@ -115,7 +116,7 @@ namespace Microsoft.eShopWeb
 
         public static IWebHost BuildWebHost(string[] args, IAppHost appHost) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://0.0.0.0:5106")
+                .UseUrls("http://*:5106")
                 .UseStartup<Startup>()
                 .ConfigureServices(services => { services.AddStarcounter(appHost); })
                 .Build();

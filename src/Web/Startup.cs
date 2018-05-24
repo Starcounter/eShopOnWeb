@@ -67,8 +67,8 @@ namespace Microsoft.eShopWeb
                 options.LogoutPath = "/Account/Signout";
             });
 
-//            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-//            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
+            //            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
+            //            services.AddScoped(typeof(IAsyncRepository<>), typeof(EfRepository<>));
             services.AddScoped(typeof(IRepository<>), typeof(StarcounterRepository<>));
             services.AddScoped(typeof(IAsyncRepository<>), typeof(StarcounterRepository<>));
             services.AddScoped(typeof(IRepository<Basket>), typeof(BasketRepository));
@@ -98,7 +98,7 @@ namespace Microsoft.eShopWeb
         private static void ConfigureIdentity(IServiceCollection services)
         {
             AddIdentityWithoutRoles<ApplicationUser>(services)
-                    .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders();
             services.TryAddScoped<IUserStore<ApplicationUser>, StarcounterUserStore>();
         }
 
@@ -154,10 +154,10 @@ namespace Microsoft.eShopWeb
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
+        public void Configure(IApplicationBuilder app,
             IHostingEnvironment env)
         {
-//            Program.PrintTableHierarchy();
+            //            Program.PrintTableHierarchy();
 
             if (env.IsDevelopment())
             {
